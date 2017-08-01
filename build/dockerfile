@@ -9,5 +9,6 @@ RUN apt-get update && apt-get install -y -f \
     mysql-client
 
 ADD ./src /srv
+ADD ./schema.sql /srv/schema.sql
 
 CMD php -S 0.0.0.0:80 -t /srv/public /srv/public/index.php
