@@ -1,0 +1,21 @@
+version: '3'
+services:
+    app:
+        container_name: app
+        image: kaplarn/salesautopilot
+        ports:
+            - 80:80
+        links:
+            - database:database
+        environment:
+            - DATABASE_HOST
+            - DATABASE_USER
+            - DATABASE_PASSWORD
+            
+    database:
+        container_name: database
+        image: mysql
+        ports:
+            - 3306:3306
+        environment:
+            - MYSQL_ROOT_PASSWORD

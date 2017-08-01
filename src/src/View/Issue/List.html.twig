@@ -1,0 +1,61 @@
+{% include 'Header.html.twig' %}
+{% include 'Menu.html.twig' %}
+            
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="text-right">
+            <a class="btn btn-success" href="/issue/create">New Issue</a>
+        </div>
+        <br />
+        <table class="table">
+            <thead class="thead-inverse table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>User</th>
+                    <th>Deadline</th>
+                    <th>Created</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if issues %}
+                    {% for issue in issues %}
+                        <tr>
+                            <td>{{ issue.id }}</td>
+                            <td>{{ issue.title }}</td>
+                            <td>{{ issue.status }}</td>
+                            <td>{{ issue.user }}</td>
+                            <td>{{ issue.deadline|date('Y-m-d') }}</td>
+                            <td>{{ issue.created|date('Y-m-d') }}</td>
+                            <td><a href="/issue/edit/{{ issue.id}}">Edit</a></td>
+                            <td><a href="/issue/remove/{{ issue.id }}">Remove</a></td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">-</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+            <tfoot class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>User</th>
+                    <th>Deadline</th>
+                    <th>Created</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+{% include 'Footer.html.twig' %}

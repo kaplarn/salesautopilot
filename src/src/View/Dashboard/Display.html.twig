@@ -1,0 +1,88 @@
+{% include 'Header.html.twig' %}
+{% include 'Menu.html.twig' %}
+
+<div id="kanban"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+            var fields =
+                [
+                    { name: "id", type: "string" },
+                    { name: "status", map: "state", type: "string" },
+                    { name: "text", map: "label", type: "string" },
+                    { name: "tags", type: "string" },
+                    { name: "color", map: "hex", type: "string" },
+                    { name: "resourceId", type: "number" }
+                ];
+            
+            var source =
+                {
+                    localData: 
+                        [
+                            {% for issue in issues %}
+                                { id: "{{ issue.id }}", state: "{{ issue.statusId }}", label: "{{ issue.title }}", tags: "", hex: "#5dc3f0", resourceId: {{ issue.userId }} },
+                            {% endfor %}
+                        ],
+                    dataType: "array",
+                    dataFields: fields
+                };
+                
+            var dataAdapter = new $.jqx.dataAdapter(source);
+            var resourcesAdapterFunc = function () {
+                var resourcesSource =
+                {
+                    localData: [
+                        {% for user in users %}
+                            { id: {{ user.id}}, name: "{{ user.name }}", image: "../../jqwidgets/styles/images/common.png" },
+                        {% endfor %}
+                    ],
+                    dataType: "array",
+                    dataFields: [
+                         { name: "id", type: "number" },
+                         { name: "name", type: "string" },
+                         { name: "image", type: "string" },
+                         { name: "common", type: "boolean" }
+                    ]
+                };
+                var resourcesDataAdapter = new $.jqx.dataAdapter(resourcesSource);
+                return resourcesDataAdapter;
+            }
+            
+            $('#kanban').jqxKanban({
+                resources: resourcesAdapterFunc(),
+                source: dataAdapter,
+                columns: [
+                    {% for status in statuses %}
+                        { text: "{{ status.name }}", dataField: "{{ status.id }}" },
+                    {% endfor %}
+                ]
+            });
+            
+            $('#kanban').on('itemMoved', function (event) {
+                var args = event.args;
+                var itemId = args.itemId;
+                var oldParentId = args.oldParentId;
+                var newParentId = args.newParentId;
+                var itemData = args.itemData;
+                var oldColumn = args.oldColumn;
+                var newColumn = args.newColumn;
+                
+                console.log(oldColumn);
+                console.log(newColumn);
+                console.log(itemData);
+                
+                if (oldColumn.dataField == newColumn.dataField) {
+                    console.log('equal');
+                    return;
+                }
+                
+                $.ajax({
+                    url: "/issue/statusupdate/" + itemData.id + "/" + newColumn.dataField,
+                });
+                
+                console.log('do update');
+            });
+        });
+</script>
+
+{% include 'Footer.html.twig' %}

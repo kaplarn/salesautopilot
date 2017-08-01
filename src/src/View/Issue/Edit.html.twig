@@ -1,0 +1,81 @@
+{% include 'Header.html.twig' %}
+{% include 'Menu.html.twig' %}
+            
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form action="/issue/edit/{{ issue.id }}" method="POST">            
+            <div class="form-group{% if titleError is defined %} has-danger{% endif %}">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Issue Title" value="{{ issue.title }}" />
+                {% if titleError is defined %}
+                    <div class="form-control-feedback">{{ titleError }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group{% if contactError is defined %} has-danger{% endif %}">
+                <label for="contact">Contact</label>
+                <input type="text" class="form-control" id="contact" name="contact" placeholder="Contact" value="{{ issue.contact }}" />
+                {% if contactError is defined %}
+                    <div class="form-control-feedback">{{ contactError }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group{% if userError is defined %} has-danger{% endif %}">
+                <label for="userId">User</label>
+                <select class="form-control" id="userId" name="userId">
+                    {% for id, name in users %}
+                        {% if id == issue.userId %}
+                            <option value="{{ id }}" selected="selected">{{ name }}</option>
+                        {% else %}
+                            <option value="{{ id }}">{{ name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                {% if userError is defined %}
+                    <div class="form-control-feedback">{{ userError }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group{% if statusError is defined %} has-danger{% endif %}">
+                <label for="statusId">Status</label>
+                <select class="form-control" id="statusId" name="statusId">
+                    {% for id, name in statuses %}
+                        {% if id == issue.statusId %}
+                            <option value="{{ id }}" selected="selected">{{ name }}</option>
+                        {% else %}
+                            <option value="{{ id }}">{{ name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                {% if statusError is defined %}
+                    <div class="form-control-feedback">{{ statusError }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="deadline">Deadline</label>
+                <input class="form-control" id="deadline" name="deadline" type="datetime-local" value="{{ issue.deadline|date('Y-m-d H:i')|replace({' ': 'T'}) }}" />
+                {% if deadlineError is defined %}
+                    <div class="form-control-feedback">{{ deadlineError }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3">{{ issue.description }}</textarea>
+                {% if descriptionError is defined %}
+                    <div class="form-control-feedback">{{ descriptionError }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-primary" href="/status/list">Back</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+{% include 'Footer.html.twig' %}
